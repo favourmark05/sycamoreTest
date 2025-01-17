@@ -277,7 +277,7 @@ const handleSubmit = async () => {
       await store.updateCustomer(formData.value);
       router.push("/usersPage");
       toastStore.showToast({
-        message: "Customer added successfully",
+        message: "Customer updated successfully",
         type: "success",
         life: 10000
       });
@@ -300,6 +300,11 @@ const handleSubmit = async () => {
     
   } catch (error) {
     console.error("Error saving customer:", error);
+    toastStore.showToast({
+        message: "Failed to save customer. Please try again.",
+        type: "error",
+        life: 10000
+      });
     alert("Failed to save customer. Please try again.");
   } finally {
     isSubmitting.value = false;

@@ -129,14 +129,18 @@
       >
         <div class="flex items-center justify-between p-4 w-full">
           <!-- Search Input -->
-          <SearchInput v-model="searchQuery" @search="handleSearch" v-if="$route.name === 'UsersPage'"/>
+          <SearchInput
+            v-model="searchQuery"
+            @search="handleSearch"
+            v-if="$route.name === 'UsersPage' || $route.name === 'CustomerForm'"
+          />
 
           <!-- Notification and Profile -->
           <div class="flex items-center space-x-4">
             <!-- Notification Icon -->
             <button class="relative">
               <svg
-                class="w-6 h-6 text-gray-600"
+                class="w-6 h-6 text-gray-600 ml-3"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -160,9 +164,11 @@
               <img
                 src="../assets/avater.jpeg"
                 alt="User Avatar"
-                class="w-8 h-8 rounded-full"
+                class="w-16 h-8 md:w-10 md:h-10 rounded-full object-cover object-center flex-shrink-0"
               />
-              <span class="text-gray-700 font-medium">Mfonido Mark</span>
+              <span class="hidden md:block text-gray-700 font-medium"
+                >Mfonido Mark</span
+              >
             </div>
           </div>
         </div>
@@ -172,7 +178,20 @@
           @click="sidebarOpen = !sidebarOpen"
           class="md:hidden bg-gray-800 text-white p-2 rounded"
         >
-          Menu
+          <svg
+            class="w-5 h-5"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M4 6h16M4 10h16M4 14h16M4 18h16"
+            />
+          </svg>
         </button>
       </header>
 
@@ -202,7 +221,7 @@ import { ref, computed, watch, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import CustomerForm from "../components/CustomerForm.vue";
 import SearchInput from "../components/SearchInput.vue";
-import { useCustomerStore } from "@/stores/customerStore.js"
+import { useCustomerStore } from "@/stores/customerStore.js";
 
 const route = useRoute();
 const store = useCustomerStore();
@@ -221,7 +240,7 @@ const isActive = (path) => {
 };
 
 const handleSearch = () => {
-    store.searchCustomers(searchQuery.value);
+  store.searchCustomers(searchQuery.value);
 };
 
 const handleEdit = (customer) => {
