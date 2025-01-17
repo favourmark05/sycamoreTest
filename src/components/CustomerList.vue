@@ -2,7 +2,6 @@
   <div
     class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border bg-white p-5 rounded-lg"
   >
-
     <!-- Customer Table -->
     <div class="overflow-x-auto">
       <table class="min-w-full divide-y divide-gray-200">
@@ -18,14 +17,21 @@
             <th class="px-6 py-3 text-right">Actions</th>
           </tr>
         </thead>
-        <tbody class="bg-white divide-y divide-gray-200" v-if="store.getAllCustomers.length > 0">
-          <tr v-for="(customer, index) in store.getAllCustomers" :key="customer.id" class="border-b">
-            <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
+        <tbody
+          class="bg-white divide-y divide-gray-200"
+          v-if="store.getAllCustomers.length > 0"
+        >
+          <tr
+            v-for="(customer, index) in paginatedCustomers"
+            :key="customer.id"
+            class="border-b"
+          >
+            <td class="px-6 py-4 whitespace-nowrap">{{ (currentPage -1 ) * itemsPerPage + index + 1 }}</td>
             <td class="px-6 py-4 whitespace-nowrap">
               {{ customer.firstName }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">
-              {{ customer.lastName  }}
+              {{ customer.lastName }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap">{{ customer.email }}</td>
             <td class="px-6 py-4 whitespace-nowrap">{{ customer.phone }}</td>
@@ -43,47 +49,81 @@
               </span>
             </td>
             <td
-              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative"
             >
+              <!-- Dropdown Toggle Button -->
               <button
                 @click="toggleDropdown(index)"
                 type="button"
-                class="w-1 h-2"
+                class="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 aria-expanded="false"
                 aria-haspopup="true"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 512">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 128 512"
+                >
                   <path
                     d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
                   />
                 </svg>
               </button>
 
-              <!-- Dropdown menu, conditionally rendered -->
-              <div v-if="dropdownStates[index]" class="absolute block mt-5 space-y-3">
-                <button
-                  @click="editCustomer(customer)"
-                  class="items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  Edit
-                </button>
-                <br />
-                <button
-                  @click="confirmDelete(customer.id)"
-                  class="items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
-                >
-                  Delete
-                </button>
+              <!-- Dropdown Menu -->
+              <div
+                v-if="dropdownStates[index]"
+                class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+              >
+                <div class="py-1">
+                  <button
+                    @click="editCustomer(customer)"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    @click="confirmDelete(customer.id)"
+                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100 hover:text-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </td>
           </tr>
         </tbody>
-        <tbody v-else class="text-center w-full ">
-            <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">No customers found</td>
-            </tr>
+        <tbody v-else class="text-center w-full">
+          <tr>
+            <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+              No customers found
+            </td>
+          </tr>
         </tbody>
       </table>
+    </div>
+     <!-- Pagination -->
+     <div class="mt-4 flex items-center justify-between">
+      <div class="flex">
+        <button
+          @click="goToPreviousPage"
+          :disabled="currentPage === 1"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-white border rounded-l-md hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+        <button
+          @click="goToNextPage"
+          :disabled="currentPage === totalPages"
+          class="px-4 py-2 text-sm font-medium text-gray-600 bg-white border rounded-r-md hover:bg-gray-50 disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
+      <div class="text-sm text-gray-500">
+        Page {{ currentPage }} of {{ totalPages }}
+      </div>
     </div>
     <ConfirmModal
       :isVisible="isVisible"
@@ -111,23 +151,49 @@
 import { ref, computed, watch } from "vue";
 import { useCustomerStore } from "../stores/customerStore";
 import { useToastStore } from "../stores/toast";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 import ConfirmModal from "./ConfirmModal.vue";
-  
+
 const router = useRouter();
-const dropdownStates = ref({})
+const dropdownStates = ref({});
 const store = useCustomerStore();
 const toastStore = useToastStore();
 const searchQuery = ref("");
 const isOpen = ref(false);
-const isVisible = ref(false)
+const isVisible = ref(false);
 
+// Pagination logic
+const itemsPerPage = 10;
+const currentPage = ref(1);
+
+const totalPages = computed(() =>
+  Math.ceil(store.customers.length / itemsPerPage)
+);
+
+const paginatedCustomers = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return store.filteredCustomers.slice(start, start + itemsPerPage);
+});
 const toggleDropdown = (index) => {
-    dropdownStates.value[index] = !dropdownStates.value[index];
-
+  dropdownStates.value[index] = !dropdownStates.value[index];
+};
+const goToPreviousPage = () => {
+  if (currentPage.value > 1) currentPage.value -= 1;
 };
 
-const tableHeaders = ["#", "First Name", "Last Name", "Email", "Phone", "State", "Status"];
+const goToNextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value += 1;
+};
+
+const tableHeaders = [
+  "#",
+  "First Name",
+  "Last Name",
+  "Email",
+  "Phone",
+  "State",
+  "Status",
+];
 
 // Filter customers by search query across multiple fields
 const filteredCustomers = computed(() => {
@@ -147,47 +213,49 @@ const filteredCustomers = computed(() => {
   );
 });
 
-watch(filteredCustomers, (newCustomers) => {
-  newCustomers.forEach((_, index) => {
-    if (dropdownStates.value[index] === undefined) {
-      dropdownStates.value[index] = false;
-    }
-  });
-}, { immediate: true });
-
+watch(
+  filteredCustomers,
+  (newCustomers) => {
+    newCustomers.forEach((_, index) => {
+      if (dropdownStates.value[index] === undefined) {
+        dropdownStates.value[index] = false;
+      }
+    });
+  },
+  { immediate: true }
+);
 
 const handleSearch = () => {
   // Triggers computed property update
 };
 
 const editCustomer = (customer) => {
-    store.setCustomerToEdit(customer);
-    router.push('/addCustomer')
+  store.setCustomerToEdit(customer);
+  router.push("/addCustomer");
 };
 const customerToDelete = ref();
 
 const confirmDelete = (id) => {
-    isVisible.value = true;
-    customerToDelete.value = id
+  isVisible.value = true;
+  customerToDelete.value = id;
 };
 const handleDelete = async () => {
-    try {
-      await store.deleteCustomer(customerToDelete.value);
-      toastStore.showToast({
-        message: "Customer Deleted successfully",
-        type: "success",
-      });
-      dropdownStates.value = {};
-    } catch (error) {
-      console.error('Error deleting customer:', error);
-      alert('Failed to delete customer. Please try again.');
-    }
+  try {
+    await store.deleteCustomer(customerToDelete.value);
+    toastStore.showToast({
+      message: "Customer Deleted successfully",
+      type: "success",
+    });
+    dropdownStates.value = {};
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    alert("Failed to delete customer. Please try again.");
+  }
 };
 
 const handleUpdate = (value) => {
   isVisible.value = value;
   dropdownStates.value = {};
 };
-
 </script>
   
