@@ -40,7 +40,7 @@ export const useCustomerStore = defineStore('customer',
             ...customer,
             id: Date.now().toString()
           };
-      customers.value.push(newCustomer);
+      customers.value.unshift(newCustomer);
       // Also update filtered results if there's an active search
       if (searchQuery.value) {
         searchCustomers(searchQuery.value);

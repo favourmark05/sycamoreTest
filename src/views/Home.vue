@@ -5,7 +5,7 @@
 
 <script setup>
 import MessageAlert from "../components/MessageAlert.vue"
-import DashBoard from "../components/DashBoard.vue"
+import DashBoard from "./DashBoard.vue"
 
 </script>
 

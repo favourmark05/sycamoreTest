@@ -232,7 +232,6 @@ watch(
 onMounted(() => {
   const customerToEdit = store.customerToEdit;
   if (customerToEdit) {
-    // Make sure to copy all properties, including the id
     Object.assign(formData.value, customerToEdit);
   }
 });
