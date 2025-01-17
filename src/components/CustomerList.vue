@@ -22,7 +22,7 @@
             <tr
               v-for="(customer, index) in paginatedCustomers"
               :key="customer.id"
-              class="border-b"
+              class="border-b hover:bg-gray-200 cursor-pointer"
             >
               <td class="px-6 py-4 whitespace-nowrap">
                 {{ (currentPage - 1) * itemsPerPage + index + 1 }}
