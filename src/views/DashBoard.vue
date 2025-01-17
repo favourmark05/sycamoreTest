@@ -39,7 +39,7 @@
               <router-link
                 to="/usersPage"
                 :class="{
-                  'text-purple-600 bg-purple-100': isActive('/usersPage'),
+                  'text-purple-600 bg-purple-100': isActive('/usersPage, /customer/:id, /addCustomer'),
                   'text-gray-500': !isActive('/usersPage'),
                 }"
                 class="flex items-center py-2 px-4 space-x-3 rounded text-gray-400 hover:text-purple-600 hover:bg-purple-100"
@@ -125,18 +125,22 @@
     <div class="flex-1 flex flex-col ml-0">
       <!-- Header -->
       <header
-        class="bg-gray-50 shadow px-4 py-2 flex items-center justify-between border"
+        class="bg-gray-50 shadow px-4 py-4 flex items-center justify-between border"
       >
-        <div class="flex items-center justify-between p-4 w-full">
+        <div class="flex items-center justify-between w-full">
           <!-- Search Input -->
-          <SearchInput
-            v-model="searchQuery"
-            @search="handleSearch"
-            v-if="$route.name === 'UsersPage' || $route.name === 'CustomerForm'"
-          />
+          <div class="flex-1">
+            <SearchInput
+              v-model="searchQuery"
+              @search="handleSearch"
+              v-if="
+                $route.name === 'UsersPage' || $route.name === 'CustomerForm'
+              "
+            />
+          </div>
 
           <!-- Notification and Profile -->
-          <div class="flex items-center space-x-4">
+          <div class="flex items-center space-x-4 justify-end">
             <!-- Notification Icon -->
             <button class="relative">
               <svg
@@ -153,7 +157,6 @@
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-5-5.917V4a2 2 0 10-4 0v1.083A6.002 6.002 0 004 11v3.159c0 .417-.162.818-.451 1.118L2 17h5m4 0v1a3 3 0 006 0v-1m-6 0a3.001 3.001 0 01-5.995-.15"
                 />
               </svg>
-              <!-- Notification Badge (if needed) -->
               <span
                 class="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"
               ></span>
@@ -164,7 +167,7 @@
               <img
                 src="../assets/avater.jpeg"
                 alt="User Avatar"
-                class="w-16 h-8 md:w-10 md:h-10 rounded-full object-cover object-center flex-shrink-0"
+                class="w-10 h-10 mr-3 md:w-10 md:h-10 rounded-full object-cover object-center flex-shrink-0"
               />
               <span class="hidden md:block text-gray-700 font-medium"
                 >Mfonido Mark</span
@@ -235,8 +238,19 @@ const handleFormSubmit = () => {
   editingCustomer.value = null;
 };
 
-const isActive = (path) => {
-  return route.path === path;
+const isActive = (pathString) => {
+  if (!pathString) return false;
+
+  // Split the string into individual paths
+  const paths = pathString.split(',').map((path) => path.trim());
+  
+  // Check if the current route matches any of the paths
+  return paths.some((path) => {
+    // Handle exact matches or dynamic segments (e.g., /customer/:id)
+    const regex = new RegExp(`^${path.replace(/:\w+/g, '\\w+')}$`);
+    return regex.test(route.path);
+  });
+
 };
 
 const handleSearch = () => {

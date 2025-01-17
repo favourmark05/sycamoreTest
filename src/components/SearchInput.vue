@@ -36,7 +36,7 @@ const emit = defineEmits(['update:modelValue', 'search']);
 
 const handleInput = (event) => {
   emit('update:modelValue', event.target.value);
-  emit('search'); // Trigger search immediately on input
+  emit('search');
 };
 </script>
   

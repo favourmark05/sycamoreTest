@@ -145,6 +145,18 @@
           class="absolute right-2 top-12 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
         >
           <div class="py-1">
+            <router-link
+                    :to="{
+                      name: 'CustomerDetails',
+                      params: { id: customer.id },
+                    }"
+                  >
+                    <button
+                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+                    >
+                      View
+                    </button>
+                  </router-link>
             <button
               @click="editCustomer(customer)"
               class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"

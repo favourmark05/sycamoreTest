@@ -106,7 +106,7 @@ export const useCustomerStore = defineStore('customer',
     persist: {
       key: 'customer-store',
       storage: localStorage,
-      paths: ['customers'] // We only need to persist the main customers array
+      paths: ['customers']
     }
   }
 );
