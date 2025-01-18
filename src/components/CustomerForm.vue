@@ -295,8 +295,6 @@ const handleSubmit = async () => {
 
     // Clear the customerToEdit in store
     store.setCustomerToEdit(null);
-
-    // Navigate back to the customer list
     
   } catch (error) {
     console.error("Error saving customer:", error);

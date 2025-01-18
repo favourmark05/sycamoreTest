@@ -341,14 +341,3 @@ const handleUpdate = (value) => {
   dropdownStates.value = {};
 };
 </script>
-<style>
-/* table {
-  position: relative;
-  overflow: visible; 
-}
-td {
-  position: relative;
-  overflow: visible;
-} */
-
-</style>
