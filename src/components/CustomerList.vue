@@ -239,7 +239,6 @@
         Page {{ currentPage }} of {{ totalPages }}
       </div>
     </div>
-
     <ConfirmModal
       :isVisible="isVisible"
       :title="'Delete Customer'"

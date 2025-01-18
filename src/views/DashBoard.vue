@@ -214,6 +214,14 @@
           </div>
         </div>
         <router-view></router-view>
+        <footer class="mt-8 border-t pt-6 text-center">
+      <p class="text-sm text-gray-600">
+        Design inspiration by 
+        <a href="https://www.behance.net/gallery/211291667/user-management-(-UI-design-)?tracking_source=search_projects|customer+dashboard&l=10" target="_blank" class="font-medium text-blue-600 hover:text-blue-800">
+          Shahzaib Ahmad on Behance
+        </a>
+      </p>
+    </footer>
       </main>
     </div>
   </div>
