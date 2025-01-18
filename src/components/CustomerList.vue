@@ -51,59 +51,59 @@
               </span>
             </td>
             <td
-              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium "
+              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
             >
               <div class="relative">
                 <button
-                @click="toggleDropdown(index)"
-                type="button"
-                class="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="w-4 h-4"
-                  fill="currentColor"
-                  viewBox="0 0 128 512"
+                  @click="toggleDropdown(index)"
+                  type="button"
+                  class="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <path
-                    d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
-                  />
-                </svg>
-              </button>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="w-4 h-4"
+                    fill="currentColor"
+                    viewBox="0 0 128 512"
+                  >
+                    <path
+                      d="M64 360a56 56 0 1 0 0 112 56 56 0 1 0 0-112zm0-160a56 56 0 1 0 0 112 56 56 0 1 0 0-112zM120 96A56 56 0 1 0 8 96a56 56 0 1 0 112 0z"
+                    />
+                  </svg>
+                </button>
 
-              <!-- Dropdown Menu -->
-              <div
-                v-if="dropdownStates[index]"
-                class="fixed transform translate-x-full -translate-y-1/5  w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                style="z-index: 1000; right: 17%;"
-              >
-                <div class="py-1">
-                  <router-link
-                    :to="{
-                      name: 'CustomerDetails',
-                      params: { id: customer.id },
-                    }"
-                  >
-                    <button
-                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+                <!-- Dropdown Menu -->
+                <div
+                  v-if="dropdownStates[index]"
+                  class="fixed transform translate-x-full -translate-y-1/5 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                  style="z-index: 1000; right: 15%"
+                >
+                  <div class="py-1">
+                    <router-link
+                      :to="{
+                        name: 'CustomerDetails',
+                        params: { id: customer.id },
+                      }"
                     >
-                      View
+                      <button
+                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+                      >
+                        View
+                      </button>
+                    </router-link>
+                    <button
+                      @click="editCustomer(customer)"
+                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"
+                    >
+                      Edit
                     </button>
-                  </router-link>
-                  <button
-                    @click="editCustomer(customer)"
-                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    @click="confirmDelete(customer.id)"
-                    class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100 hover:text-red-600"
-                  >
-                    Delete
-                  </button>
+                    <button
+                      @click="confirmDelete(customer.id)"
+                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-red-100 hover:text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-              </div>
               </div>
             </td>
           </tr>
@@ -149,17 +149,17 @@
         >
           <div class="py-1">
             <router-link
-                    :to="{
-                      name: 'CustomerDetails',
-                      params: { id: customer.id },
-                    }"
-                  >
-                    <button
-                      class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
-                    >
-                      View
-                    </button>
-                  </router-link>
+              :to="{
+                name: 'CustomerDetails',
+                params: { id: customer.id },
+              }"
+            >
+              <button
+                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-green-600"
+              >
+                View
+              </button>
+            </router-link>
             <button
               @click="editCustomer(customer)"
               class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600"
@@ -318,6 +318,7 @@ const editCustomer = (customer) => {
 const customerToDelete = ref();
 
 const confirmDelete = (id) => {
+  dropdownStates.value = {};
   isVisible.value = true;
   customerToDelete.value = id;
 };
