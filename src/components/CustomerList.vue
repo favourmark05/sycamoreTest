@@ -51,9 +51,10 @@
               </span>
             </td>
             <td
-              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium relative"
+              class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium "
             >
-              <button
+              <div class="relative">
+                <button
                 @click="toggleDropdown(index)"
                 type="button"
                 class="inline-flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 bg-gray-100 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -73,7 +74,8 @@
               <!-- Dropdown Menu -->
               <div
                 v-if="dropdownStates[index]"
-                class="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                class="fixed transform translate-x-full -translate-y-1/5  w-40 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                style="z-index: 1000; right: 17%;"
               >
                 <div class="py-1">
                   <router-link
@@ -101,6 +103,7 @@
                     Delete
                   </button>
                 </div>
+              </div>
               </div>
             </td>
           </tr>
@@ -248,7 +251,7 @@
 </template>
   
   <script setup>
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useCustomerStore } from "../stores/customerStore";
 import { useToastStore } from "../stores/toast";
 import { useRouter } from "vue-router";
@@ -338,3 +341,14 @@ const handleUpdate = (value) => {
   dropdownStates.value = {};
 };
 </script>
+<style>
+/* table {
+  position: relative;
+  overflow: visible; 
+}
+td {
+  position: relative;
+  overflow: visible;
+} */
+
+</style>
