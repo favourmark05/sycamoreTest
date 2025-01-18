@@ -160,7 +160,7 @@ const formData = ref({
   email: "",
   phone: "",
   state: "",
-  isActive: false,
+  isActive: true,
   details: "",
 });
 
@@ -221,7 +221,7 @@ watch(
         email: "",
         phone: "",
         state: "",
-        isActive: false,
+        isActive: true,
       };
       isEditing.value = false;
     }
